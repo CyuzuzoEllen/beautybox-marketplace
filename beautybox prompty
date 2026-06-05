@@ -1,0 +1,297 @@
+BeautyBox Marketplace Project Prompt
+
+Create a modern, responsive web application called BeautyBox Marketplace.
+
+Project Description
+
+BeautyBox Marketplace is an online marketplace that connects customers with beauty and cosmetic product sellers. The platform should allow customers to browse products, search for items, add products to a shopping cart, place orders, and leave reviews. Sellers should be able to manage products, inventory, and customer orders through a dedicated dashboard.
+
+The application should be beginner-friendly, secure, responsive, and suitable for desktop, tablet, and mobile devices.
+
+User Roles
+1. Customer
+
+Customers should be able to:
+
+Register an account
+Login and logout
+Edit profile information
+Browse all products
+Search products by name
+Filter products by category
+View product details
+Add products to cart
+Update cart quantities
+Remove products from cart
+Place orders
+View order history
+Track order status
+Leave ratings and reviews
+2. Seller
+
+Sellers should be able to:
+
+Register seller account
+Login and logout
+Manage profile
+Add new products
+Edit products
+Delete products
+Upload product images
+Manage inventory
+View customer orders
+Update order status
+View sales statistics
+3. Admin
+
+Admins should be able to:
+
+Manage users
+Manage sellers
+Manage products
+Manage categories
+View marketplace statistics
+Manage reviews
+Suspend or delete accounts
+Monitor orders
+Main Pages
+Public Pages
+Home Page
+
+Include:
+
+Hero section
+Featured beauty products
+Popular categories
+Seller highlights
+Customer testimonials
+Search bar
+About Page
+
+Display:
+
+Company information
+Mission and vision
+Marketplace benefits
+Contact Page
+
+Include:
+
+Contact form
+Email information
+Phone number
+Location map
+Authentication Pages
+Registration Page
+
+Fields:
+
+Full Name
+Email
+Password
+Confirm Password
+Account Type (Customer or Seller)
+Login Page
+
+Fields:
+
+Email
+Password
+Forgot Password Page
+
+Allow password reset.
+
+Product Management
+
+Each product should contain:
+
+Product ID
+Product Name
+Brand
+Category
+Description
+Price
+Stock Quantity
+Product Image
+Seller Name
+Rating
+
+Categories:
+
+Makeup
+Skincare
+Hair Care
+Fragrances
+Beauty Tools
+Personal Care
+Product Details Page
+
+Display:
+
+Product image gallery
+Product description
+Product price
+Available stock
+Seller information
+Customer ratings
+Customer reviews
+Add to Cart button
+Shopping Cart
+
+Features:
+
+Add products
+Update quantity
+Remove products
+Calculate subtotal
+Calculate total cost
+Checkout button
+Checkout System
+
+Collect:
+
+Customer Name
+Phone Number
+Delivery Address
+Payment Method
+
+Order summary should display:
+
+Products ordered
+Quantity
+Total amount
+Order Management
+
+Order Status:
+
+Pending
+Confirmed
+Processing
+Shipped
+Delivered
+Cancelled
+
+Customers can view order history.
+
+Sellers can update order status.
+
+Review System
+
+Customers can:
+
+Rate products from 1–5 stars
+Write reviews
+Edit reviews
+Delete reviews
+Seller Dashboard
+
+Display:
+
+Total Products
+Total Orders
+Total Sales
+Recent Orders
+Inventory Status
+Admin Dashboard
+
+Display:
+
+Total Users
+Total Sellers
+Total Products
+Total Orders
+Total Revenue
+
+Include management tables for:
+
+Users
+Sellers
+Products
+Orders
+Reviews
+Database Structure
+Users Table
+id
+full_name
+email
+password
+role
+created_at
+Products Table
+id
+seller_id
+name
+category
+description
+price
+stock
+image
+created_at
+Orders Table
+id
+customer_id
+total_amount
+status
+created_at
+Order_Items Table
+id
+order_id
+product_id
+quantity
+price
+Reviews Table
+id
+user_id
+product_id
+rating
+comment
+created_at
+Categories Table
+id
+name
+UI/UX Requirements
+
+Create a modern beauty-themed interface with:
+
+Soft pink and white color palette
+Elegant typography
+Responsive design
+Mobile-friendly layout
+Smooth animations
+Professional product cards
+Clean navigation menu
+Technical Requirements
+
+Build the application using:
+
+Frontend: React.js
+Backend: Node.js + Express.js
+Database: PostgreSQL
+Authentication: JWT
+Image Upload Support
+REST API Architecture
+Additional Features
+Product search
+Category filtering
+Wishlist
+Notifications
+Seller analytics
+Product recommendations
+Secure authentication
+Error handling
+Form validation
+
+Generate:
+
+Complete project structure.
+Database schema.
+Frontend pages.
+Backend API endpoints.
+Authentication system.
+Seller dashboard.
+Admin dashboard.
+Shopping cart functionality.
+Checkout workflow.
+Responsive UI design.
+
+The final application should be fully functional, modern, scalable, and ready for deployment.
