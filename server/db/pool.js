@@ -1,40 +1,59 @@
-// =====================================================
-// DATABASE CONNECTION POOL
-// =====================================================
-// This file creates a connection "pool" to our PostgreSQL
-// database. A pool keeps several database connections open
-// and ready to use, which is much faster than opening a
-// new connection for every single query.
-//
-// We use the 'pg' library (node-postgres) to connect.
-// The connection settings come from our .env file.
-// =====================================================
+const sqlite3 = require('sqlite3').verbose();
+const path = require('path');
+const fs = require('fs');
 
-// Load environment variables from .env file
-const { Pool } = require('pg');
-require('dotenv').config();
+// Path to the SQLite database file
+const dbPath = path.resolve(__dirname, 'database.sqlite');
 
-// Create a new connection pool with our database settings
-const pool = new Pool({
-    user: process.env.DB_USER,         // Database username (default: postgres)
-    host: process.env.DB_HOST,         // Database server address (default: localhost)
-    database: process.env.DB_NAME,     // Database name (beautybox)
-    password: process.env.DB_PASSWORD, // Database password
-    port: process.env.DB_PORT,         // Database port (default: 5432)
+// Initialize the database connection
+const db = new sqlite3.Database(dbPath, (err) => {
+    if (err) {
+        console.error('Error opening database', err.message);
+    } else {
+        console.log('Connected to the SQLite database.');
+        
+        // Initialize tables if they don't exist
+        const schema = fs.readFileSync(path.resolve(__dirname, 'schema.sql'), 'utf8');
+        db.exec(schema, (err) => {
+            if (err) console.error('Error creating schema:', err);
+        });
+    }
 });
 
-// Test the connection when the app starts
-pool.on('connect', () => {
-    console.log('✅ Connected to PostgreSQL database');
-});
+// Create a wrapper to use Promises with sqlite3
+const pool = {
+    query: (sql, params = []) => {
+        return new Promise((resolve, reject) => {
+            // Convert Postgres $1, $2 syntax to SQLite ? syntax
+            const sqliteSql = sql.replace(/\$\d+/g, '?');
+            
+            // Check if it's an INSERT/UPDATE/DELETE or a SELECT
+            if (sqliteSql.trim().toUpperCase().startsWith('SELECT') || sqliteSql.trim().toUpperCase().startsWith('PRAGMA')) {
+                db.all(sqliteSql, params, (err, rows) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve({ rows: rows });
+                    }
+                });
+            } else {
+                db.run(sqliteSql, params, function(err) {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        // Return this.lastID and this.changes similar to Postgres RETURNING output for our basic needs
+                        // We wrap it in a 'rows' array so existing code like `result.rows[0]` won't crash immediately,
+                        // though we'll update the specific auth.js queries as well.
+                        resolve({
+                            lastID: this.lastID,
+                            changes: this.changes,
+                            rows: [{ id: this.lastID }]
+                        });
+                    }
+                });
+            }
+        });
+    }
+};
 
-// Log any unexpected errors on idle connections
-pool.on('error', (err) => {
-    console.error('❌ Unexpected database error:', err);
-    process.exit(-1); // Exit the app if we lose the database
-});
-
-// Export the pool so other files can use it to run queries
-// Usage: const pool = require('./db/pool');
-//        const result = await pool.query('SELECT * FROM users');
 module.exports = pool;

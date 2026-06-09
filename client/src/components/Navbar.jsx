@@ -1,9 +1,20 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { FiShoppingBag, FiUser, FiSearch, FiMenu } from 'react-icons/fi';
+import React, { useContext } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { FiShoppingBag, FiUser, FiSearch, FiMenu, FiLogOut } from 'react-icons/fi';
+import { AuthContext } from '../context/AuthContext';
+import { CartContext } from '../context/CartContext';
 import './Navbar.css';
 
 const Navbar = () => {
+  const { user, isAuthenticated, logout } = useContext(AuthContext);
+  const { cartCount } = useContext(CartContext);
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate('/');
+  };
+
   return (
     <nav className="navbar">
       <div className="navbar-container">
@@ -23,12 +34,25 @@ const Navbar = () => {
             <input type="text" placeholder="Search products..." />
             <FiSearch className="search-icon" />
           </div>
-          <Link to="/login" className="action-btn">
-            <FiUser size={22} />
-          </Link>
+          
+          {isAuthenticated ? (
+            <div className="user-menu" style={{display: 'flex', alignItems: 'center', gap: '1rem'}}>
+              <Link to="/profile" className="action-btn" title="Profile">
+                <FiUser size={22} />
+              </Link>
+              <button onClick={handleLogout} className="action-btn" style={{background: 'none', border: 'none', cursor: 'pointer'}} title="Logout">
+                <FiLogOut size={22} />
+              </button>
+            </div>
+          ) : (
+            <Link to="/login" className="action-btn" title="Login">
+              <FiUser size={22} />
+            </Link>
+          )}
+
           <Link to="/cart" className="action-btn cart-btn">
             <FiShoppingBag size={22} />
-            <span className="cart-badge">0</span>
+            {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}
           </Link>
           <button className="mobile-menu-btn">
             <FiMenu size={24} />
