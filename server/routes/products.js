@@ -275,8 +275,8 @@ router.post(
                 return res.status(400).json({ message: 'Category not found' });
             }
 
-            // Get the image filename if one was uploaded
-            const image = req.file ? req.file.filename : null;
+            // Get the Cloudinary image URL if one was uploaded
+            const image = req.file ? req.file.path : null;
 
             // Insert the new product
             const result = await pool.query(
@@ -367,7 +367,7 @@ router.put(
             if (req.file) {
                 paramCount++;
                 updates.push(`image = $${paramCount}`);
-                values.push(req.file.filename);
+                values.push(req.file.path);
             }
 
             if (updates.length === 0) {
