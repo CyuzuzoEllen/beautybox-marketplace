@@ -77,7 +77,7 @@ router.post(
             // Step 5: Insert the new user into the database
             const newUser = await pool.query(
                 `INSERT INTO users (name, email, password, role) 
-                 VALUES ($1, $2, $3, $4)`,
+                 VALUES ($1, $2, $3, $4) RETURNING *`,
                 [name, email, hashedPassword, role || 'customer']
             );
 
