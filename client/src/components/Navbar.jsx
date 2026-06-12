@@ -37,6 +37,11 @@ const Navbar = () => {
           
           {isAuthenticated ? (
             <div className="user-menu" style={{display: 'flex', alignItems: 'center', gap: '1rem'}}>
+              {user?.role === 'seller' && (
+                <Link to="/seller/dashboard" className="action-btn" title="Seller Dashboard" style={{textDecoration: 'none', fontWeight: 'bold', fontSize: '0.9rem'}}>
+                  Dashboard
+                </Link>
+              )}
               <Link to="/profile" className="action-btn" title="Profile">
                 <FiUser size={22} />
               </Link>
