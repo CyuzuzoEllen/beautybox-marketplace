@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { FiHeart, FiStar } from 'react-icons/fi';
+import { CartContext } from '../../../context/CartContext';
 import './ProductCard.css';
 
 const ProductCard = ({ product }) => {
+  const { addToCart } = useContext(CartContext);
   // In a real app, images would be URLs from a cloud provider.
   // For now, we'll use a beautiful gradient placeholder if no image exists.
   const hasImage = product.image && product.image.length > 0;
@@ -40,7 +42,13 @@ const ProductCard = ({ product }) => {
         
         <div className="product-bottom">
           <span className="product-price">${Number(product.price).toFixed(2)}</span>
-          <button className="btn btn-primary btn-sm add-cart-btn">
+          <button 
+            className="btn btn-primary btn-sm add-cart-btn"
+            onClick={(e) => {
+              e.preventDefault();
+              addToCart(product);
+            }}
+          >
             Add to Cart
           </button>
         </div>

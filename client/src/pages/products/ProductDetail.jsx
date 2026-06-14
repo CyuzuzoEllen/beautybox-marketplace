@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import productService from '../../services/productService';
+import { CartContext } from '../../context/CartContext';
 import { FiHeart, FiStar, FiTruck, FiShield, FiMinus, FiPlus } from 'react-icons/fi';
 import './ProductDetail.css';
 
 const ProductDetail = () => {
+  const { addToCart } = useContext(CartContext);
   const { id } = useParams();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -95,7 +97,11 @@ const ProductDetail = () => {
               <button onClick={() => setQuantity(Math.min(product.stock, quantity + 1))}><FiPlus /></button>
             </div>
             
-            <button className="btn btn-primary add-to-cart-lg" disabled={product.stock === 0}>
+            <button 
+              className="btn btn-primary add-to-cart-lg" 
+              disabled={product.stock === 0}
+              onClick={() => addToCart(product, quantity)}
+            >
               Add to Cart
             </button>
             

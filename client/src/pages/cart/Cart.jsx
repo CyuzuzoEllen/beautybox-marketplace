@@ -37,7 +37,7 @@ const Cart = () => {
                 <div className="item-details">
                   <div className="item-image">
                     {item.image ? (
-                      <img src={`http://localhost:5000/uploads/${item.image}`} alt={item.name} />
+                      <img src={item.image} alt={item.name} />
                     ) : (
                       <div className="placeholder-img">{item.name.substring(0, 2).toUpperCase()}</div>
                     )}

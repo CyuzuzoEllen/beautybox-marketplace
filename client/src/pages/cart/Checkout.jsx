@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { CartContext } from '../../context/CartContext';
 import { AuthContext } from '../../context/AuthContext';
 import { toast } from 'react-toastify';
+import orderService from '../../services/orderService';
 import './Cart.css'; // Reusing some layout from Cart
 
 const Checkout = () => {
@@ -35,13 +36,27 @@ const Checkout = () => {
     e.preventDefault();
     setIsProcessing(true);
     
-    // Simulate API call to process order
-    setTimeout(() => {
-      setIsProcessing(false);
+    try {
+      const orderData = {
+        shipping_address: `${formData.shippingAddress}, ${formData.city}, ${formData.zipCode}`,
+        payment_method: formData.paymentMethod,
+        items: cartItems.map(item => ({
+          product_id: item.id,
+          quantity: item.quantity
+        }))
+      };
+
+      await orderService.createOrder(orderData);
+      
       clearCart();
       toast.success('Order placed successfully! Thank you for shopping.');
-      navigate('/');
-    }, 2000);
+      navigate('/orders'); 
+    } catch (error) {
+      console.error('Checkout error:', error);
+      toast.error(error.response?.data?.message || 'Failed to place order. Please try again.');
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
   const tax = cartTotal * 0.08;
