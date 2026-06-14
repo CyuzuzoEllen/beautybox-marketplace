@@ -12,7 +12,7 @@ const ProductCard = ({ product }) => {
     <div className="product-card animate-slide-up">
       <Link to={`/products/${product.id}`} className="product-image-container">
         {hasImage ? (
-          <img src={`http://localhost:5000/uploads/${product.image}`} alt={product.name} />
+          <img src={product.image} alt={product.name} />
         ) : (
           <div className="product-image-placeholder">
             <span>{product.name.substring(0, 2).toUpperCase()}</span>

@@ -47,7 +47,7 @@ const ProductDetail = () => {
         <div className="product-gallery">
           <div className="main-image">
             {hasImage ? (
-              <img src={`http://localhost:5000/uploads/${product.image}`} alt={product.name} />
+              <img src={product.image} alt={product.name} />
             ) : (
               <div className="image-placeholder">
                 <span>{product.name.substring(0, 2).toUpperCase()}</span>
