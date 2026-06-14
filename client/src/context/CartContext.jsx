@@ -27,21 +27,19 @@ export const CartProvider = ({ children }) => {
   }, [cartItems]);
 
   const addToCart = (product, quantity = 1) => {
-    setCartItems(prev => {
-      const existingItem = prev.find(item => item.id === product.id);
-      
-      if (existingItem) {
-        toast.success(`Updated ${product.name} quantity in cart!`);
-        return prev.map(item => 
-          item.id === product.id 
-            ? { ...item, quantity: item.quantity + quantity }
-            : item
-        );
-      }
-      
+    const existingItem = cartItems.find(item => item.id === product.id);
+    
+    if (existingItem) {
+      setCartItems(cartItems.map(item => 
+        item.id === product.id 
+          ? { ...item, quantity: item.quantity + quantity }
+          : item
+      ));
+      toast.success(`Updated ${product.name} quantity in cart!`);
+    } else {
+      setCartItems([...cartItems, { ...product, quantity }]);
       toast.success(`${product.name} added to cart!`);
-      return [...prev, { ...product, quantity }];
-    });
+    }
   };
 
   const removeFromCart = (productId) => {
