@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { FiX, FiUploadCloud } from 'react-icons/fi';
 import { toast } from 'react-toastify';
-import api from '../../services/api';
+import api from '../services/api';
 import './AddProductModal.css';
 
 const AddProductModal = ({ isOpen, onClose, onSuccess }) => {
