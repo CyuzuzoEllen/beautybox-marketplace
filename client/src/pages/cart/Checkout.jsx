@@ -28,6 +28,16 @@ const Checkout = () => {
     );
   }
 
+  if (!user) {
+    return (
+      <div className="cart-empty-container">
+        <h2>Please log in to checkout</h2>
+        <p style={{marginTop: '1rem'}}>You need an account to place an order.</p>
+        <Link to="/login" className="btn btn-primary mt-4">Log In to Continue</Link>
+      </div>
+    );
+  }
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
