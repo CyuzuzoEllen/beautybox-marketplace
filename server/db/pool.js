@@ -30,5 +30,6 @@ pool.connect((err, client, release) => {
 
 // Export a simple query wrapper so all routes work the same as before
 module.exports = {
-    query: (text, params) => pool.query(text, params)
+    query: (text, params) => pool.query(text, params),
+    connect: () => pool.connect()
 };
