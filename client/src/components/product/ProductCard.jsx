@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { FiHeart, FiStar } from 'react-icons/fi';
-import { CartContext } from '../../../context/CartContext';
+import { CartContext } from '../../context/CartContext';
 import './ProductCard.css';
 
 const ProductCard = ({ product }) => {
