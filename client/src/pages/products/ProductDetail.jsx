@@ -6,6 +6,7 @@ import { CartContext } from '../../context/CartContext';
 import { AuthContext } from '../../context/AuthContext';
 import { FiHeart, FiStar, FiTruck, FiShield, FiMinus, FiPlus, FiMessageSquare } from 'react-icons/fi';
 import { toast } from 'react-toastify';
+import { formatRWF } from '../../utils/currency';
 import './ProductDetail.css';
 
 const ProductDetail = () => {
@@ -154,7 +155,7 @@ const ProductDetail = () => {
             </span>
           </div>
           
-          <h2 className="price">${Number(product.price).toFixed(2)}</h2>
+          <h2 className="price">{formatRWF(product.price)}</h2>
           
           <div className="description">
             <p>{product.description || 'Experience the ultimate beauty treatment with this premium product. Formulated with the finest ingredients to give you the perfect glow.'}</p>

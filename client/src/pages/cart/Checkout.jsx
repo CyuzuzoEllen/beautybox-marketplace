@@ -4,6 +4,7 @@ import { CartContext } from '../../context/CartContext';
 import { AuthContext } from '../../context/AuthContext';
 import { toast } from 'react-toastify';
 import orderService from '../../services/orderService';
+import { formatRWF } from '../../utils/currency';
 import './Cart.css'; // Reusing some layout from Cart
 
 const Checkout = () => {
@@ -155,22 +156,22 @@ const Checkout = () => {
             
             <div className="summary-row">
               <span>Subtotal</span>
-              <span>${cartTotal.toFixed(2)}</span>
+              <span>{formatRWF(cartTotal)}</span>
             </div>
             <div className="summary-row">
               <span>Shipping</span>
-              <span>{shipping === 0 ? 'Free' : `$${shipping}`}</span>
+              <span>{cartTotal > 50 ? 'Free' : formatRWF(5.99)}</span>
             </div>
             <div className="summary-row">
-              <span>Tax</span>
-              <span>${tax.toFixed(2)}</span>
+              <span>Estimated Tax</span>
+              <span>{formatRWF(tax)}</span>
             </div>
             
             <div className="summary-divider"></div>
             
             <div className="summary-row total">
               <span>Total</span>
-              <span>${finalTotal.toFixed(2)}</span>
+              <span>{formatRWF(finalTotal)}</span>
             </div>
             
             <button 

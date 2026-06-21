@@ -2,6 +2,7 @@ import React, { useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
 import { FiUser, FiPackage, FiHeart, FiSettings, FiLogOut, FiExternalLink } from 'react-icons/fi';
+import { formatRWF } from '../../utils/currency';
 import './CustomerPages.css';
 
 const OrderHistory = () => {
@@ -80,7 +81,7 @@ const OrderHistory = () => {
                     </div>
                     <div className="meta-item">
                       <span className="meta-label">Total</span>
-                      <span className="meta-value">${order.total.toFixed(2)}</span>
+                      <span className="meta-value">{formatRWF(order.total)}</span>
                     </div>
                     <div className="meta-item">
                       <span className="meta-label">Order ID</span>
@@ -102,7 +103,7 @@ const OrderHistory = () => {
                         <p>{item.brand}</p>
                       </div>
                       <div style={{marginLeft: 'auto', fontWeight: '600'}}>
-                        ${item.price.toFixed(2)}
+                        {formatRWF(item.price)}
                       </div>
                     </div>
                   ))}

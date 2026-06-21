@@ -2,6 +2,7 @@ import React, { useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
 import { FiPieChart, FiUsers, FiBox, FiShoppingBag, FiLogOut } from 'react-icons/fi';
+import { formatRWF } from '../../utils/currency';
 import './AdminDashboard.css';
 
 const ManageAllProducts = () => {
@@ -70,7 +71,7 @@ const ManageAllProducts = () => {
                   <td>#{p.id}</td>
                   <td><strong>{p.name}</strong></td>
                   <td>{p.seller}</td>
-                  <td>${p.price.toFixed(2)}</td>
+                  <td>{formatRWF(p.price)}</td>
                   <td>
                     <span style={{color: p.status === 'Flagged' ? '#ef4444' : '#10b981', fontWeight: 600}}>
                       {p.status}

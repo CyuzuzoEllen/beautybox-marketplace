@@ -2,6 +2,7 @@ import React, { useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { CartContext } from '../../context/CartContext';
 import { FiTrash2, FiMinus, FiPlus, FiArrowRight } from 'react-icons/fi';
+import { formatRWF } from '../../utils/currency';
 import './Cart.css';
 
 const Cart = () => {
@@ -44,7 +45,7 @@ const Cart = () => {
                   </div>
                   <div className="item-info">
                     <Link to={`/products/${item.id}`} className="item-name">{item.name}</Link>
-                    <span className="item-price">${Number(item.price).toFixed(2)}</span>
+                    <span className="item-price">{formatRWF(item.price)}</span>
                   </div>
                 </div>
                 
@@ -55,7 +56,7 @@ const Cart = () => {
                 </div>
                 
                 <div className="item-total-price">
-                  <span>${(item.price * item.quantity).toFixed(2)}</span>
+                  <span>{formatRWF(item.price * item.quantity)}</span>
                   <button className="remove-btn" onClick={() => removeFromCart(item.id)} title="Remove item">
                     <FiTrash2 />
                   </button>
@@ -71,22 +72,22 @@ const Cart = () => {
             
             <div className="summary-row">
               <span>Subtotal</span>
-              <span>${cartTotal.toFixed(2)}</span>
+              <span>{formatRWF(cartTotal)}</span>
             </div>
             <div className="summary-row">
               <span>Shipping</span>
-              <span>{cartTotal > 50 ? 'Free' : '$5.99'}</span>
+              <span>{cartTotal > 50 ? 'Free' : formatRWF(5.99)}</span>
             </div>
             <div className="summary-row">
               <span>Tax (Estimated)</span>
-              <span>${(cartTotal * 0.08).toFixed(2)}</span>
+              <span>{formatRWF(cartTotal * 0.08)}</span>
             </div>
             
             <div className="summary-divider"></div>
             
             <div className="summary-row total">
               <span>Total</span>
-              <span>${(cartTotal + (cartTotal > 50 ? 0 : 5.99) + (cartTotal * 0.08)).toFixed(2)}</span>
+              <span>{formatRWF(cartTotal + (cartTotal > 50 ? 0 : 5.99) + (cartTotal * 0.08))}</span>
             </div>
             
             <button 

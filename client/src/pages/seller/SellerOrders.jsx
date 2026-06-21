@@ -4,6 +4,7 @@ import { AuthContext } from '../../context/AuthContext';
 import orderService from '../../services/orderService';
 import { toast } from 'react-toastify';
 import { FiGrid, FiPackage, FiShoppingCart, FiLogOut, FiLoader, FiInbox } from 'react-icons/fi';
+import { formatRWF } from '../../utils/currency';
 import './SellerDashboard.css';
 
 const SellerOrders = () => {
@@ -234,7 +235,7 @@ const SellerOrders = () => {
                         </td>
                         <td>
                           <span className="order-total-cell">
-                            ${parseFloat(order.seller_total).toFixed(2)}
+                            {formatRWF(order.seller_total)}
                           </span>
                         </td>
                         <td>

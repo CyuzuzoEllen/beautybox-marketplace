@@ -5,6 +5,7 @@ import { FiGrid, FiPackage, FiShoppingCart, FiEdit, FiTrash2, FiPlus, FiLogOut }
 import api from '../../services/api';
 import AddProductModal from '../../components/AddProductModal';
 import { toast } from 'react-toastify';
+import { formatRWF } from '../../utils/currency';
 import './SellerDashboard.css';
 
 const ManageProducts = () => {
@@ -117,7 +118,7 @@ const ManageProducts = () => {
                         </div>
                       </td>
                       <td>{product.category_name || 'Uncategorized'}</td>
-                      <td>${parseFloat(product.price).toFixed(2)}</td>
+                      <td>{formatRWF(product.price)}</td>
                       <td>{product.stock}</td>
                       <td>
                         <span className={`status-badge ${product.is_active ? 'status-active' : 'status-draft'}`}>

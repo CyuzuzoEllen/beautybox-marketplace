@@ -2,6 +2,7 @@ import React, { useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
 import { FiPieChart, FiUsers, FiBox, FiShoppingBag, FiLogOut } from 'react-icons/fi';
+import { formatRWF } from '../../utils/currency';
 import './AdminDashboard.css';
 
 const ManageAllOrders = () => {
@@ -71,7 +72,7 @@ const ManageAllOrders = () => {
                   <td>{o.date}</td>
                   <td>{o.customer}</td>
                   <td>{o.seller}</td>
-                  <td>${o.amount.toFixed(2)}</td>
+                  <td>{formatRWF(o.amount)}</td>
                   <td>
                     <span className={`badge-customer`} style={{
                       background: o.status === 'delivered' ? '#dcfce7' : o.status === 'shipped' ? '#fef3c7' : '#dbeafe',
