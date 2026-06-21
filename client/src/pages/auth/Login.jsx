@@ -2,12 +2,13 @@ import React, { useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
 import { toast } from 'react-toastify';
+import { GoogleLogin } from '@react-oauth/google';
 import './Login.css';
 
 const Login = () => {
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [isLoading, setIsLoading] = useState(false);
-  const { login } = useContext(AuthContext);
+  const { login, loginWithGoogle } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -30,6 +31,19 @@ const Login = () => {
     setIsLoading(false);
   };
 
+  const handleGoogleSuccess = async (credentialResponse) => {
+    setIsLoading(true);
+    const result = await loginWithGoogle(credentialResponse.credential);
+    
+    if (result.success) {
+      toast.success('Logged in with Google!');
+      navigate('/');
+    } else {
+      toast.error(result.message);
+    }
+    setIsLoading(false);
+  };
+
   return (
     <div className="auth-container">
       <div className="auth-card animate-slide-up">
@@ -38,6 +52,25 @@ const Login = () => {
           <p>Login to your BeautyBox account</p>
         </div>
         
+        <div className="google-auth-container">
+          <GoogleLogin
+            onSuccess={handleGoogleSuccess}
+            onError={() => {
+              toast.error('Google Sign In failed');
+            }}
+            useOneTap
+            shape="rectangular"
+            theme="filled_black"
+            text="signin_with"
+            size="large"
+            width="100%"
+          />
+        </div>
+
+        <div className="auth-divider">
+          <span>Or continue with email</span>
+        </div>
+
         <form onSubmit={handleSubmit} className="auth-form">
           <div className="form-group">
             <label htmlFor="email">Email Address</label>

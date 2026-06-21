@@ -2,6 +2,7 @@ import React, { useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
 import { toast } from 'react-toastify';
+import { GoogleLogin } from '@react-oauth/google';
 import './Login.css'; // We reuse the login styles
 
 const Register = () => {
@@ -13,7 +14,7 @@ const Register = () => {
     role: 'customer'
   });
   const [isLoading, setIsLoading] = useState(false);
-  const { register } = useContext(AuthContext);
+  const { register, loginWithGoogle } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -47,6 +48,19 @@ const Register = () => {
     setIsLoading(false);
   };
 
+  const handleGoogleSuccess = async (credentialResponse) => {
+    setIsLoading(true);
+    const result = await loginWithGoogle(credentialResponse.credential);
+    
+    if (result.success) {
+      toast.success('Signed in with Google! Welcome to BeautyBox.');
+      navigate('/');
+    } else {
+      toast.error(result.message);
+    }
+    setIsLoading(false);
+  };
+
   return (
     <div className="auth-container">
       <div className="auth-card animate-slide-up" style={{maxWidth: '500px'}}>
@@ -55,6 +69,25 @@ const Register = () => {
           <p>Join BeautyBox Marketplace today</p>
         </div>
         
+        <div className="google-auth-container">
+          <GoogleLogin
+            onSuccess={handleGoogleSuccess}
+            onError={() => {
+              toast.error('Google Sign Up failed');
+            }}
+            useOneTap
+            shape="rectangular"
+            theme="filled_black"
+            text="signup_with"
+            size="large"
+            width="100%"
+          />
+        </div>
+
+        <div className="auth-divider">
+          <span>Or register with email</span>
+        </div>
+
         <form onSubmit={handleSubmit} className="auth-form">
           <div className="form-group">
             <label htmlFor="name">Full Name</label>

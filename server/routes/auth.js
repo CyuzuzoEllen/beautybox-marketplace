@@ -232,4 +232,94 @@ router.get('/me', verifyToken, async (req, res) => {
     }
 });
 
+// -------------------------------------------------
+// POST /api/auth/google
+// -------------------------------------------------
+// Authenticates a user using a Google OAuth token.
+// If the user doesn't exist, an account is auto-created.
+// -------------------------------------------------
+const { OAuth2Client } = require('google-auth-library');
+const crypto = require('crypto');
+
+// Use env variable or a placeholder to prevent crashes
+const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID || '1234567890-placeholder.apps.googleusercontent.com';
+const googleClient = new OAuth2Client(GOOGLE_CLIENT_ID);
+
+router.post('/google', async (req, res) => {
+    try {
+        const { credential } = req.body;
+        
+        if (!credential) {
+            return res.status(400).json({ message: 'No credential provided' });
+        }
+
+        // Verify the token
+        const ticket = await googleClient.verifyIdToken({
+            idToken: credential,
+            audience: GOOGLE_CLIENT_ID,
+        });
+        
+        const payload = ticket.getPayload();
+        const { email, name, picture } = payload;
+
+        // Check if user exists
+        let result = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
+        let user;
+
+        if (result.rows.length === 0) {
+            // User does not exist, let's create an account
+            // We generate a long random password since they use Google to log in
+            const randomPassword = crypto.randomBytes(32).toString('hex');
+            const salt = await bcrypt.genSalt(10);
+            const hashedPassword = await bcrypt.hash(randomPassword, salt);
+
+            const newUser = await pool.query(
+                `INSERT INTO users (name, email, password, role, avatar) 
+                 VALUES ($1, $2, $3, $4, $5) RETURNING *`,
+                [name, email, hashedPassword, 'customer', picture]
+            );
+            user = newUser.rows[0];
+
+            // Create welcome notification
+            await pool.query(
+                `INSERT INTO notifications (user_id, title, message, type) 
+                 VALUES ($1, $2, $3, $4)`,
+                [user.id, 'Welcome to BeautyBox!', 'Thanks for joining using Google. Enjoy shopping!', 'system']
+            );
+        } else {
+            user = result.rows[0];
+            
+            if (user.is_suspended) {
+                return res.status(403).json({ message: 'Your account has been suspended. Contact support for help.' });
+            }
+        }
+
+        // Generate JWT
+        const token = jwt.sign(
+            { id: user.id, email: user.email, role: user.role },
+            process.env.JWT_SECRET,
+            { expiresIn: '24h' }
+        );
+
+        res.json({
+            message: 'Google login successful!',
+            token,
+            user: {
+                id: user.id,
+                name: user.name,
+                email: user.email,
+                role: user.role,
+                phone: user.phone,
+                address: user.address,
+                avatar: user.avatar,
+                created_at: user.created_at
+            }
+        });
+
+    } catch (error) {
+        console.error('Google login error:', error);
+        res.status(500).json({ message: 'Failed to authenticate with Google' });
+    }
+});
+
 module.exports = router;

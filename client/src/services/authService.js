@@ -11,6 +11,11 @@ const authService = {
     return response.data;
   },
 
+  loginWithGoogle: async (credential) => {
+    const response = await api.post('/auth/google', { credential });
+    return response.data;
+  },
+
   getCurrentUser: async () => {
     const response = await api.get('/auth/me');
     return response.data;

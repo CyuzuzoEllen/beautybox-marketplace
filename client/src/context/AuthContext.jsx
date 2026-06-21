@@ -40,6 +40,20 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const loginWithGoogle = async (credential) => {
+    try {
+      const data = await authService.loginWithGoogle(credential);
+      localStorage.setItem('token', data.token);
+      setUser(data.user);
+      return { success: true };
+    } catch (error) {
+      return { 
+        success: false, 
+        message: error.response?.data?.message || 'Google Login failed' 
+      };
+    }
+  };
+
   const register = async (userData) => {
     try {
       const data = await authService.register(userData);
@@ -61,7 +75,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, register, logout, isAuthenticated: !!user }}>
+    <AuthContext.Provider value={{ user, loading, login, loginWithGoogle, register, logout, isAuthenticated: !!user }}>
       {children}
     </AuthContext.Provider>
   );
