@@ -282,3 +282,244 @@
   background: #f1f5f9;
   object-fit: cover;
 }
+
+/* =====================================================
+   SELLER ORDERS - PREMIUM STYLES
+   ===================================================== */
+
+/* Slide-up animation */
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-slide-up {
+  animation: slideUp 0.4s ease-out;
+}
+
+/* Order count badge in header */
+.order-count-badge {
+  background: linear-gradient(135deg, #ede9fe, #f3e8ff);
+  color: #7c3aed;
+  padding: 0.4rem 1rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+/* Filter Tabs */
+.order-filter-tabs {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.filter-tab {
+  padding: 0.5rem 1rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 20px;
+  background: white;
+  color: #64748b;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.filter-tab:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+  background: #fff5f9;
+}
+
+.filter-tab.active {
+  background: var(--primary);
+  color: white;
+  border-color: var(--primary);
+  box-shadow: 0 4px 12px rgba(233, 30, 140, 0.25);
+}
+
+.filter-count {
+  background: rgba(255,255,255,0.25);
+  padding: 0.1rem 0.45rem;
+  border-radius: 10px;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.filter-tab:not(.active) .filter-count {
+  background: #f1f5f9;
+  color: #475569;
+}
+
+/* Order Table Row Hover Animation */
+.order-row {
+  transition: all 0.25s ease;
+}
+
+.order-row:hover {
+  background-color: #fdf2f8;
+  transform: scale(1.005);
+  box-shadow: 0 2px 8px rgba(233, 30, 140, 0.08);
+}
+
+/* Order ID cell */
+.order-id-cell {
+  font-weight: 700;
+  color: #6366f1;
+  font-size: 0.9rem;
+}
+
+/* Products in order cell */
+.order-products-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.order-product-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.product-name-text {
+  font-weight: 500;
+  color: #1e293b;
+  font-size: 0.9rem;
+  display: block;
+}
+
+.product-qty-text {
+  font-size: 0.8rem;
+  color: #94a3b8;
+  margin-left: 0.25rem;
+}
+
+/* Customer cell */
+.customer-cell {
+  display: flex;
+  flex-direction: column;
+}
+
+.customer-name {
+  font-weight: 600;
+  color: #1e293b;
+  font-size: 0.9rem;
+}
+
+.customer-email {
+  font-size: 0.75rem;
+  color: #94a3b8;
+}
+
+/* Order total */
+.order-total-cell {
+  font-weight: 700;
+  color: #0f172a;
+  font-size: 1rem;
+}
+
+/* Additional status badge colors */
+.status-pending {
+  background: #fff7ed;
+  color: #c2410c;
+}
+
+.status-cancelled {
+  background: #fef2f2;
+  color: #dc2626;
+}
+
+/* Status select dropdown */
+.status-select {
+  padding: 0.4rem 0.75rem;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  background: white;
+  color: #334155;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  outline: none;
+  min-width: 140px;
+}
+
+.status-select:hover {
+  border-color: var(--primary);
+}
+
+.status-select:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(233, 30, 140, 0.15);
+}
+
+.status-select:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+/* No-action label for completed/cancelled orders */
+.no-action-text {
+  font-size: 0.85rem;
+  color: #94a3b8;
+  font-weight: 500;
+}
+
+/* Loading state */
+.orders-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  color: #94a3b8;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.spinner-icon {
+  font-size: 2rem;
+  animation: spin 1s linear infinite;
+  margin-bottom: 1rem;
+  color: var(--primary);
+}
+
+.orders-loading p {
+  font-size: 1rem;
+  color: #64748b;
+}
+
+/* Empty state */
+.orders-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  text-align: center;
+}
+
+.empty-icon {
+  font-size: 3rem;
+  color: #cbd5e1;
+  margin-bottom: 1rem;
+}
+
+.orders-empty h3 {
+  color: #334155;
+  margin: 0 0 0.5rem 0;
+}
+
+.orders-empty p {
+  color: #94a3b8;
+  max-width: 360px;
+}
