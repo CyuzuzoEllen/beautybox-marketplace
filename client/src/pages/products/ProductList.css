@@ -108,6 +108,43 @@
   font-weight: 600;
 }
 
+.cat-count {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  float: right;
+}
+
+.category-list button.active .cat-count {
+  color: var(--primary-dark);
+}
+
+.price-filter-group {
+  margin-top: 2rem;
+}
+
+.price-inputs {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.price-inputs input {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #e5e7eb;
+  border-radius: var(--radius-sm);
+  outline: none;
+}
+
+.price-inputs input:focus {
+  border-color: var(--primary);
+}
+
+.clear-filters-btn {
+  width: 100%;
+  margin-top: 2rem;
+}
+
 .product-grid-section {
   flex: 1;
 }

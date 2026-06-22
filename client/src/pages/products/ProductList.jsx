@@ -7,18 +7,57 @@ import './ProductList.css';
 const ProductList = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [search, setSearch] = useState('');
+  const [categories, setCategories] = useState([]);
   
-  // This would typically come from an API endpoint
-  const categories = ['All', 'Makeup', 'Skincare', 'Hair Care', 'Fragrances', 'Beauty Tools'];
-  const [activeCategory, setActiveCategory] = useState('All');
+  // Filter state
+  const [search, setSearch] = useState('');
+  const [debouncedSearch, setDebouncedSearch] = useState('');
+  const [activeCategory, setActiveCategory] = useState('');
+  const [minPrice, setMinPrice] = useState('');
+  const [maxPrice, setMaxPrice] = useState('');
+  const [debouncedMinPrice, setDebouncedMinPrice] = useState('');
+  const [debouncedMaxPrice, setDebouncedMaxPrice] = useState('');
+  const [sort, setSort] = useState('newest');
 
+  // Debounce search and price inputs
+  useEffect(() => {
+    const timerId = setTimeout(() => {
+      setDebouncedSearch(search);
+      setDebouncedMinPrice(minPrice);
+      setDebouncedMaxPrice(maxPrice);
+    }, 500);
+
+    return () => {
+      clearTimeout(timerId);
+    };
+  }, [search, minPrice, maxPrice]);
+
+  // Fetch categories on mount
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const data = await productService.getCategories();
+        setCategories(data.categories || []);
+      } catch (error) {
+        console.error('Failed to fetch categories', error);
+      }
+    };
+    fetchCategories();
+  }, []);
+
+  // Fetch products when filters change
   useEffect(() => {
     const fetchProducts = async () => {
       setLoading(true);
       try {
-        // In a real app, we'd pass search and category params to the API
-        const data = await productService.getProducts();
+        const params = {};
+        if (debouncedSearch) params.search = debouncedSearch;
+        if (activeCategory) params.category = activeCategory;
+        if (debouncedMinPrice) params.min_price = debouncedMinPrice;
+        if (debouncedMaxPrice) params.max_price = debouncedMaxPrice;
+        if (sort) params.sort = sort;
+
+        const data = await productService.getProducts(params);
         setProducts(data.products || []);
       } catch (error) {
         console.error('Failed to fetch products', error);
@@ -28,14 +67,15 @@ const ProductList = () => {
     };
 
     fetchProducts();
-  }, []);
+  }, [debouncedSearch, activeCategory, debouncedMinPrice, debouncedMaxPrice, sort]);
 
-  // Filter products locally for demo purposes
-  const filteredProducts = products.filter(product => {
-    const matchesSearch = product.name.toLowerCase().includes(search.toLowerCase());
-    const matchesCategory = activeCategory === 'All' || product.category_name === activeCategory;
-    return matchesSearch && matchesCategory;
-  });
+  const clearFilters = () => {
+    setSearch('');
+    setActiveCategory('');
+    setMinPrice('');
+    setMaxPrice('');
+    setSort('newest');
+  };
 
   return (
     <div className="product-list-page">
@@ -60,37 +100,73 @@ const ProductList = () => {
           <div className="filter-group">
             <h3>Categories <FiFilter size={16} /></h3>
             <ul className="category-list">
+              <li>
+                <button 
+                  className={activeCategory === '' ? 'active' : ''}
+                  onClick={() => setActiveCategory('')}
+                >
+                  All Products
+                </button>
+              </li>
               {categories.map(cat => (
-                <li key={cat}>
+                <li key={cat.id}>
                   <button 
-                    className={activeCategory === cat ? 'active' : ''}
-                    onClick={() => setActiveCategory(cat)}
+                    className={activeCategory === cat.id ? 'active' : ''}
+                    onClick={() => setActiveCategory(cat.id)}
                   >
-                    {cat}
+                    {cat.name} <span className="cat-count">({cat.product_count})</span>
                   </button>
                 </li>
               ))}
             </ul>
           </div>
+
+          <div className="filter-group price-filter-group">
+            <h3>Price Range (RWF)</h3>
+            <div className="price-inputs">
+              <input 
+                type="number" 
+                placeholder="Min" 
+                value={minPrice}
+                onChange={(e) => setMinPrice(e.target.value)}
+                min="0"
+              />
+              <span>-</span>
+              <input 
+                type="number" 
+                placeholder="Max" 
+                value={maxPrice}
+                onChange={(e) => setMaxPrice(e.target.value)}
+                min="0"
+              />
+            </div>
+          </div>
+          
+          <button className="btn btn-outline clear-filters-btn" onClick={clearFilters}>
+            Clear All Filters
+          </button>
         </aside>
 
         {/* Product Grid */}
         <div className="product-grid-section">
           <div className="grid-header">
-            <span>Showing {filteredProducts.length} results</span>
-            <select className="sort-select">
+            <span>Showing {products.length} results</span>
+            <select 
+              className="sort-select" 
+              value={sort}
+              onChange={(e) => setSort(e.target.value)}
+            >
               <option value="newest">Newest Arrivals</option>
-              <option value="price-low">Price: Low to High</option>
-              <option value="price-high">Price: High to Low</option>
-              <option value="rating">Top Rated</option>
+              <option value="price_asc">Price: Low to High</option>
+              <option value="price_desc">Price: High to Low</option>
             </select>
           </div>
 
           {loading ? (
             <div className="loading-state">Loading amazing products...</div>
-          ) : filteredProducts.length > 0 ? (
+          ) : products.length > 0 ? (
             <div className="products-grid">
-              {filteredProducts.map(product => (
+              {products.map(product => (
                 <ProductCard key={product.id} product={product} />
               ))}
             </div>
@@ -98,7 +174,7 @@ const ProductList = () => {
             <div className="empty-state">
               <h3>No products found</h3>
               <p>Try adjusting your search or filters.</p>
-              <button className="btn btn-outline" onClick={() => {setSearch(''); setActiveCategory('All');}}>
+              <button className="btn btn-primary" onClick={clearFilters}>
                 Clear Filters
               </button>
             </div>
